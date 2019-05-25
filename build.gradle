@@ -3,7 +3,6 @@ plugins {
 }
 
 version = '1.0-SNAPSHOT'
-project.name = 'graphmatch'
 
 sourceCompatibility = 1.8
 

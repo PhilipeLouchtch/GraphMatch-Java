@@ -8,15 +8,7 @@ public class GraphMatch
 {
 	public <T> Matching match(Vertices<T> left, Vertices<T> right, DirectedEdges<T> edges, SearchType searchType)
 	{
-		Vertex<T> source = Vertex.source();
-		Vertex<T> sink = Vertex.sink();
-
-		Vertices<T> allVertices = left.with(right).with(sink).with(source);
-
-		edges = edges.with(DirectedEdges.make(source, left));
-		edges = edges.with(DirectedEdges.make(right, sink));
-
-		Graph<T> graph = new Graph<>(allVertices, edges);
+		MaxFlowGraph<T> graph = new MaxFlowGraph<>(left, right, edges);
 
 		return new MaxFlowMatching(graph, searchType);
 	}

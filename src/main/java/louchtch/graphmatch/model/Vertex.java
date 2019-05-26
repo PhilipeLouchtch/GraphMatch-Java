@@ -1,5 +1,9 @@
 package louchtch.graphmatch.model;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Vertex<TContent>
 {
 	private TContent content;
@@ -12,6 +16,15 @@ public class Vertex<TContent>
 	public TContent content()
 	{
 		return content;
+	}
+
+	public DirectedEdges<TContent> makeEdgesTo(Vertices<TContent> toVertices)
+	{
+		List<DirectedEdges.DirectedEdge<TContent>> edges = toVertices.listOfVertices.stream()
+			.map(toVertex -> DirectedEdges.DirectedEdge.make(this, toVertex))
+			.collect(Collectors.toList());
+
+		return new DirectedEdges<>(edges);
 	}
 
 	/* Singleton types */

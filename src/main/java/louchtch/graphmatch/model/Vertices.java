@@ -2,11 +2,12 @@ package louchtch.graphmatch.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Vertices<VertexContent>
 {
-	private List<Vertex<VertexContent>> listOfVertices;
+	List<Vertex<VertexContent>> listOfVertices;
 
 	public Vertices()
 	{
@@ -18,9 +19,13 @@ public class Vertices<VertexContent>
 		listOfVertices = vertices;
 	}
 
-	public Stream<Vertex<VertexContent>> stream()
+	public DirectedEdges<VertexContent> makeEdgesTo(Vertex<VertexContent> toVertex)
 	{
-		return listOfVertices.stream();
+		List<DirectedEdges.DirectedEdge<VertexContent>> edges = this.listOfVertices.stream()
+			.map(fromVertex -> DirectedEdges.DirectedEdge.make(fromVertex, toVertex))
+			.collect(Collectors.toList());
+
+		return new DirectedEdges<>(edges);
 	}
 
 	public Vertices<VertexContent> with(Vertices<VertexContent> others)

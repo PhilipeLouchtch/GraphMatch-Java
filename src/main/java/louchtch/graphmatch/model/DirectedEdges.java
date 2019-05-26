@@ -13,23 +13,6 @@ public class DirectedEdges<T>
 		this.edges = edges;
 	}
 
-	public static <T> DirectedEdges<T> make(Vertex<T> from, Vertices<T> to)
-	{
-		List<DirectedEdge<T>> edges = to.stream()
-			.map(toVertex -> DirectedEdge.make(from, toVertex))
-			.collect(Collectors.toList());
-
-		return new DirectedEdges<T>(edges);
-	}
-
-	public static <T> DirectedEdges<T> make(Vertices<T> from, Vertex<T> to)
-	{
-		List<DirectedEdge<T>> edges = from.stream()
-			.map(fromVertex -> DirectedEdge.make(fromVertex, to))
-			.collect(Collectors.toList());
-
-		return new DirectedEdges<>(edges);
-	}
 
 	public DirectedEdges<T> with(DirectedEdges<T> others)
 	{

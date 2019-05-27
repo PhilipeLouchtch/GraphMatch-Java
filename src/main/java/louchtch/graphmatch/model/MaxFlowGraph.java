@@ -18,13 +18,18 @@ public class MaxFlowGraph<T>
 		Vertices<T> allVertices = left.with(right).with(sink).with(source);
 		this.vertices = allVertices;
 
-		DirectedWeightedEdges<T> edgesFromSourceToLeftVertices = source.makeEdgesTo(left);
-		DirectedWeightedEdges<T> edgesFromRightVerticesToSink = right.makeEdgesTo(sink);
-		this.edges = edges;
+		DirectedWeightedEdges<T> edgesSourceToLeft = new DirectedWeightedEdges<>();
+		left.forEach(leftVertex -> edgesSourceToLeft.add(source.makeEdgeTo(leftVertex, 1))); // todo proper weight
+
+		DirectedWeightedEdges<T> edgesRightToSink = new DirectedWeightedEdges<>();
+		left.forEach(rightVertex -> edgesRightToSink.add(rightVertex.makeEdgeTo(sink, 1))); // todo proper weight?
+
+		this.edges = new DirectedWeightedEdges<>();
 
 		// fixme: make edges immutable
-		this.edges.add(edgesFromSourceToLeftVertices);
-		this.edges.add(edgesFromRightVerticesToSink);
+		this.edges.add(edges);
+		this.edges.add(edgesSourceToLeft);
+		this.edges.add(edgesRightToSink);
 	}
 
 	// for when edges are immuatble again

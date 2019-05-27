@@ -18,12 +18,8 @@ public class Vertex<T>
 		return content;
 	}
 
-	public DirectedWeightedEdges<T> makeEdgesTo(Vertices<T> toVertices)
+	public DirectedWeightedEdges.DirectedWeightedEdge<T> makeEdgeTo(Vertex<T> toVertex, int weight)
 	{
-		List<DirectedWeightedEdges.DirectedWeightedEdge<T>> edges = toVertices.listOfVertices.stream()
-			.map(toVertex -> DirectedWeightedEdges.DirectedWeightedEdge.between(this, toVertex, 1)) // TODO
-			.collect(Collectors.toList());
-
-		return new DirectedWeightedEdges<>(edges);
+		return DirectedWeightedEdges.DirectedWeightedEdge.between(this, toVertex, weight);
 	}
 }

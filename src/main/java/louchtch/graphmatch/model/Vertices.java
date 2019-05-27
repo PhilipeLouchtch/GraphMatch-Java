@@ -29,15 +29,6 @@ public class Vertices<VertexContent>
 		listOfVertices.forEach(fn);
 	}
 
-	public DirectedWeightedEdges<VertexContent> makeEdgesTo(Vertex<VertexContent> toVertex)
-	{
-		List<DirectedWeightedEdges.DirectedWeightedEdge<VertexContent>> edges = this.listOfVertices.stream()
-			.map(fromVertex -> DirectedWeightedEdges.DirectedWeightedEdge.between(fromVertex, toVertex, 1)) // TODO!!!
-			.collect(Collectors.toList());
-
-		return new DirectedWeightedEdges<>(edges);
-	}
-
 	public Vertices<VertexContent> with(Vertices<VertexContent> others)
 	{
 		List<Vertex<VertexContent>> combined = new ArrayList<>(this.listOfVertices.size() + others.listOfVertices.size());

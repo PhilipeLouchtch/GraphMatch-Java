@@ -1,51 +1,29 @@
 package louchtch.graphmatch.model;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Vertex<TContent>
+public class Vertex<T>
 {
-	private TContent content;
+	public boolean isVisited;
+	private T content;
 
-	public Vertex(TContent content)
+	public Vertex(T content)
 	{
 		this.content = content;
 	}
 
-	public TContent content()
+	public T content()
 	{
 		return content;
 	}
 
-	public DirectedEdges<TContent> makeEdgesTo(Vertices<TContent> toVertices)
+	public DirectedWeightedEdges<T> makeEdgesTo(Vertices<T> toVertices)
 	{
-		List<DirectedEdges.DirectedEdge<TContent>> edges = toVertices.listOfVertices.stream()
-			.map(toVertex -> DirectedEdges.DirectedEdge.make(this, toVertex))
+		List<DirectedWeightedEdges.DirectedWeightedEdge<T>> edges = toVertices.listOfVertices.stream()
+			.map(toVertex -> DirectedWeightedEdges.DirectedWeightedEdge.between(this, toVertex, 1)) // TODO
 			.collect(Collectors.toList());
 
-		return new DirectedEdges<>(edges);
-	}
-
-	/* Singleton types */
-	private static final Vertex<?> sourceVertex = new Vertex<>(null);
-	private static final Vertex<?> sinkVertex = new Vertex<>(null);
-
-	/**
-	 * The Source vertex
-	 * @return
-	 */
-	public static <T> Vertex<T> source()
-	{
-		return (Vertex<T>) sourceVertex;
-	}
-
-	/**
-	 * The Sink vertex
-	 * @return
-	 */
-	public static <T> Vertex<T> sink()
-	{
-		return (Vertex<T>) sinkVertex;
+		return new DirectedWeightedEdges<>(edges);
 	}
 }

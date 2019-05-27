@@ -6,7 +6,7 @@ import louchtch.graphmatch.model.*;
 
 public class GraphMatch
 {
-	public <T> Matching match(Vertices<T> left, Vertices<T> right, DirectedEdges<T> edges, SearchType searchType)
+	public <T> Matching match(Vertices<T> left, Vertices<T> right, DirectedWeightedEdges<T> edges, SearchType searchType)
 	{
 		MaxFlowGraph<T> graph = new MaxFlowGraph<>(left, right, edges);
 

@@ -2,8 +2,8 @@ package louchtch.graphmatch.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Vertices<VertexContent>
 {
@@ -19,13 +19,23 @@ public class Vertices<VertexContent>
 		listOfVertices = vertices;
 	}
 
-	public DirectedEdges<VertexContent> makeEdgesTo(Vertex<VertexContent> toVertex)
+	public int count()
 	{
-		List<DirectedEdges.DirectedEdge<VertexContent>> edges = this.listOfVertices.stream()
-			.map(fromVertex -> DirectedEdges.DirectedEdge.make(fromVertex, toVertex))
+		return listOfVertices.size();
+	}
+
+	public void forEach(Consumer<Vertex<VertexContent>> fn)
+	{
+		listOfVertices.forEach(fn);
+	}
+
+	public DirectedWeightedEdges<VertexContent> makeEdgesTo(Vertex<VertexContent> toVertex)
+	{
+		List<DirectedWeightedEdges.DirectedWeightedEdge<VertexContent>> edges = this.listOfVertices.stream()
+			.map(fromVertex -> DirectedWeightedEdges.DirectedWeightedEdge.between(fromVertex, toVertex, 1)) // TODO!!!
 			.collect(Collectors.toList());
 
-		return new DirectedEdges<>(edges);
+		return new DirectedWeightedEdges<>(edges);
 	}
 
 	public Vertices<VertexContent> with(Vertices<VertexContent> others)

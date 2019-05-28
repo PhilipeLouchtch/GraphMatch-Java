@@ -18,7 +18,7 @@ public class Vertex<T>
 		return content;
 	}
 
-	public DirectedWeightedEdges.DirectedWeightedEdge<T> makeEdgeTo(Vertex<T> toVertex, int weight)
+	public DirectedWeightedEdges.DirectedWeightedEdge<? super T> makeEdgeTo(Vertex<? super T> toVertex, int weight)
 	{
 		return DirectedWeightedEdges.DirectedWeightedEdge.between(this, toVertex, weight);
 	}

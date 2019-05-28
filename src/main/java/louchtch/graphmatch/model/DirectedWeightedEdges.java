@@ -63,9 +63,9 @@ public class DirectedWeightedEdges<T>
 			this.weight = weight;
 		}
 
-		public static <T> DirectedWeightedEdge<T> between(Vertex<T> from, Vertex<T> to, int weight)
+		public static <T> DirectedWeightedEdge<T> between(Vertex<? extends T> from, Vertex<? extends T> to, int weight)
 		{
-			return new DirectedWeightedEdge<>(from, to, weight);
+			return new DirectedWeightedEdge<>((Vertex<T>) from, (Vertex<T>) to, weight);
 		}
 
 		@Override

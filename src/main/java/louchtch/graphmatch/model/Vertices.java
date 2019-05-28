@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class Vertices<VertexContent>
 {
-	List<Vertex<VertexContent>> listOfVertices;
+	protected final List<Vertex<VertexContent>> listOfVertices;
 
 	public Vertices()
 	{

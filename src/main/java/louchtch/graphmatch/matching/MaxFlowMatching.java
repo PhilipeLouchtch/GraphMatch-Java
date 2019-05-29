@@ -24,7 +24,7 @@ public class MaxFlowMatching<T> implements Matching
 
 	private void bestMatching()
 	{
-		BellmanFordAugmentingPath path = findAugmentingPath();
+		BellmanFordAugmentingPath<T> path = findAugmentingPath();
 		while (path.isAugmenting()) {
 			augmentFlowGraph(path);
 		}
@@ -32,7 +32,7 @@ public class MaxFlowMatching<T> implements Matching
 		// matching in graph source sink
 	}
 
-	private BellmanFordAugmentingPath findAugmentingPath()
+	private BellmanFordAugmentingPath<T> findAugmentingPath()
 	{
 		// searh type distinction -- todo: move to own implementations of MaxFlowMatching instead
 
@@ -48,7 +48,7 @@ public class MaxFlowMatching<T> implements Matching
 		throw new RuntimeException("Unsupported search type: " + searchType);
 	}
 
-	private void augmentFlowGraph(BellmanFordAugmentingPath path)
+	private void augmentFlowGraph(BellmanFordAugmentingPath<T> path)
 	{
 		if (!path.isAugmenting()) {
 			throw new RuntimeException("Path is not an augmenting one, cannot augment flow graph");
@@ -57,7 +57,7 @@ public class MaxFlowMatching<T> implements Matching
 		graph.augmentAlong(path);
 	}
 
-	public static class BellmanFordAugmentingPath<T>
+	static class BellmanFordAugmentingPath<T>
 	{
 		private final MaxFlowGraph<T> graph;
 		private List<Edge<T>> pathAsList = null;
@@ -76,7 +76,7 @@ public class MaxFlowMatching<T> implements Matching
 			pathAsList.forEach(fn);
 		}
 
-		public boolean isAugmenting()
+		boolean isAugmenting()
 		{
 			return bellmanFordParents().containsKey(graph.sink);
 		}

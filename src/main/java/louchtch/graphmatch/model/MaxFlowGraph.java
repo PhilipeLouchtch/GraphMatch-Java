@@ -10,6 +10,9 @@ public class MaxFlowGraph<T>
 	public final Vertex<T> source;
 	public final Vertex<T> sink;
 
+	public final Vertices<T> left;
+	public final Vertices<T> right;
+
 	public MaxFlowGraph(Vertices<T> left, Vertices<T> right, DirectedWeightedEdges<T> edges)
 	{
 		this.source = new Vertex<>(null);
@@ -17,6 +20,9 @@ public class MaxFlowGraph<T>
 
 		Vertices<T> allVertices = left.with(right).with(sink).with(source);
 		this.vertices = allVertices;
+
+		this.left = left;
+		this.right = right;
 
 		DirectedWeightedEdges<T> edgesSourceToLeft = new DirectedWeightedEdges<>();
 		left.forEach(leftVertex -> edgesSourceToLeft.add(source.makeEdgeTo(leftVertex, 1))); // todo proper weight
@@ -33,14 +39,14 @@ public class MaxFlowGraph<T>
 	}
 
 	// for when edges are immuatble again
-	private MaxFlowGraph(Vertices<T> all, DirectedWeightedEdges<T> edges, Vertex<T> source, Vertex<T> sink)
-	{
-		this.source = source;
-		this.sink = sink;
-
-		this.vertices = all;
-		this.edges = edges;
-	}
+//	private MaxFlowGraph(Vertices<T> all, DirectedWeightedEdges<T> edges, Vertex<T> source, Vertex<T> sink)
+//	{
+//		this.source = source;
+//		this.sink = sink;
+//
+//		this.vertices = all;
+//		this.edges = edges;
+//	}
 
 	public void augmentAlong(MaxFlowMatching.BellmanFordAugmentingPath<T> path)
 	{

@@ -4,6 +4,7 @@ import louchtch.graphmatch.model.*;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class MaxFlowMatching<T> implements Matching
 {
@@ -17,8 +18,14 @@ public class MaxFlowMatching<T> implements Matching
 	}
 
 	@Override
-	public Object stuff()
+	public List<Edge> asListOfEdges()
 	{
+		List<Vertex<T>> leftEdges = graph.edges.findAllFrom(graph.source)
+			.stream().map(edge -> edge.to)
+			.collect(Collectors.toList());
+
+		
+
 		return null;
 	}
 
@@ -57,7 +64,7 @@ public class MaxFlowMatching<T> implements Matching
 		graph.augmentAlong(path);
 	}
 
-	static class BellmanFordAugmentingPath<T>
+	public static class BellmanFordAugmentingPath<T>
 	{
 		private final MaxFlowGraph<T> graph;
 		private List<Edge<T>> pathAsList = null;

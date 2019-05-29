@@ -1,9 +1,13 @@
 package louchtch.graphmatch.matching;
 
-public interface Matching
+import louchtch.graphmatch.model.Edge;
+
+import java.util.List;
+
+public interface Matching<T>
 {
 	/**
 	 *  stub for returning the matching -- need to determine the interface of Matching first ...
 	 */
-	Object stuff();
+	List<Edge<T>> asListOfEdges();
 }

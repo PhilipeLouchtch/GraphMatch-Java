@@ -22,6 +22,18 @@ public class DirectedWeightedEdges<T>
 		);
 	}
 
+	public Collection<Edge<T>> findAllFrom(Vertex<T> fromVertex)
+	{
+		Map<Vertex<T>, DirectedWeightedEdge<T>> allFrom = edges.get(fromVertex);
+
+		if (allFrom == null) {
+			return Collections.emptyList();
+		}
+
+		return (Collection<Edge<T>>) (Collection<?>) allFrom.values();
+	}
+
+
 	public void turnResidiual(Edge<T> edge)
 	{
 		// edgeWeight =  -edges[u][v]

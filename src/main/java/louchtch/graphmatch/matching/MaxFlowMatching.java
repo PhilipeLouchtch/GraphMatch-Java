@@ -18,25 +18,35 @@ public class MaxFlowMatching<T> implements Matching
 	}
 
 	@Override
-	public List<Edge> asListOfEdges()
+	public List<Edge<T>> asListOfEdges()
 	{
-		List<Vertex<T>> leftEdges = graph.edges.findAllFrom(graph.source)
-			.stream().map(edge -> edge.to)
-			.collect(Collectors.toList());
-
-		
-
-		return null;
+		return bestMatching();
 	}
 
-	private void bestMatching()
+	private List<Edge<T>> matchingAsListOfEdges = null;
+	private List<Edge<T>> bestMatching()
 	{
+		if (matchingAsListOfEdges != null) {
+			return matchingAsListOfEdges;
+		}
+
 		BellmanFordAugmentingPath<T> path = findAugmentingPath();
 		while (path.isAugmenting()) {
 			augmentFlowGraph(path);
 		}
 
-		// matching in graph source sink
+		List<Vertex<T>> matchedProjects = graph.edges.findAllFrom(graph.sink)
+			.stream().map(edge -> edge.to)
+			.collect(Collectors.toList());
+
+		List<Edge<T>> matching = matchedProjects.stream()
+			.map(matchedProject -> graph.edges.findAllFrom(matchedProject).stream().findFirst())
+			.filter(Optional::isPresent).map(Optional::get)
+			.map(matchEdge -> Edge.between(matchEdge.to, matchEdge.from))
+			.collect(Collectors.toList());
+
+		matchingAsListOfEdges = matching;
+		return matchingAsListOfEdges;
 	}
 
 	private BellmanFordAugmentingPath<T> findAugmentingPath()
@@ -74,13 +84,19 @@ public class MaxFlowMatching<T> implements Matching
 			this.graph = graph;
 		}
 
-		public void forEach(Consumer<Edge<T>> fn)
+		private List<Edge<T>> pathAsList()
 		{
 			if (pathAsList == null)
 			{
 				pathAsList = determine();
 			}
-			pathAsList.forEach(fn);
+
+			return pathAsList;
+		}
+
+		public void forEach(Consumer<Edge<T>> fn)
+		{
+			pathAsList().forEach(fn);
 		}
 
 		boolean isAugmenting()

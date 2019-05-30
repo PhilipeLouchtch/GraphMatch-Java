@@ -33,6 +33,7 @@ public class MaxFlowMatching<T> implements Matching
 		BellmanFordAugmentingPath<T> path = findAugmentingPath();
 		while (path.isAugmenting()) {
 			augmentFlowGraph(path);
+			path = findAugmentingPath();
 		}
 
 		List<Vertex<T>> matchedProjects = graph.edges.findAllFrom(graph.sink)

@@ -104,6 +104,13 @@ public class MaxFlowMatching<T> implements Matching
 			return bellmanFordParents().containsKey(graph.sink);
 		}
 
+		@Override
+		public String toString()
+		{
+			return "path (isAugmenting: " + isAugmenting() + ", \n" +
+				"[" + Arrays.toString(pathAsList().toArray()) + "]";
+		}
+
 		private Map<Vertex<T>, Vertex<T>> _parents = null;
 		private Map<Vertex<T>, Vertex<T>> bellmanFordParents()
 		{

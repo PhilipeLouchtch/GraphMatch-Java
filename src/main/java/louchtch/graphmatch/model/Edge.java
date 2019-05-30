@@ -29,6 +29,12 @@ public class Edge<T>
 	}
 
 	@Override
+	public String toString()
+	{
+		return from + " -> " + to;
+	}
+
+	@Override
 	public int hashCode()
 	{
 		return Objects.hash(from, to);

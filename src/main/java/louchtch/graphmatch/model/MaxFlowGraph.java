@@ -15,8 +15,8 @@ public class MaxFlowGraph<T>
 
 	public MaxFlowGraph(Vertices<T> left, Vertices<T> right, DirectedWeightedEdges<T> edges)
 	{
-		this.source = new Vertex<>(null);
-		this.sink = new Vertex<>(null);
+		this.source = new SourceVertex<>(null);
+		this.sink = new SinkVertex<>(null);
 
 		Vertices<T> allVertices = left.with(right).with(sink).with(source);
 		this.vertices = allVertices;
@@ -50,8 +50,37 @@ public class MaxFlowGraph<T>
 
 	public void augmentAlong(MaxFlowMatching.BellmanFordAugmentingPath<T> path)
 	{
+		System.out.println("Augmenting path: " + path);
 		path.forEach(edge -> {
 			this.edges.turnResidiual(edge);
 		});
+	}
+
+	private static class SourceVertex<T> extends Vertex<T>
+	{
+		public SourceVertex(T content)
+		{
+			super(content);
+		}
+
+		@Override
+		public String toString()
+		{
+			return "Source";
+		}
+	}
+
+	private static class SinkVertex<T> extends Vertex<T>
+	{
+		public SinkVertex(T content)
+		{
+			super(content);
+		}
+
+		@Override
+		public String toString()
+		{
+			return "Sink";
+		}
 	}
 }

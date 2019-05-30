@@ -15,6 +15,12 @@ public class Vertex<T>
 		return content;
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Vertex: " + content;
+	}
+
 	public DirectedWeightedEdges.DirectedWeightedEdge<T> makeEdgeTo(Vertex<? extends T> toVertex, int weight)
 	{
 		return DirectedWeightedEdges.DirectedWeightedEdge.between(this, toVertex, weight);

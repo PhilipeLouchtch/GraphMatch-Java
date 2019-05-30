@@ -28,7 +28,7 @@ public class MaxFlowGraph<T>
 		left.forEach(leftVertex -> edgesSourceToLeft.add(source.makeEdgeTo(leftVertex, 1))); // todo proper weight
 
 		DirectedWeightedEdges<T> edgesRightToSink = new DirectedWeightedEdges<>();
-		left.forEach(rightVertex -> edgesRightToSink.add(rightVertex.makeEdgeTo(sink, 1))); // todo proper weight?
+		right.forEach(rightVertex -> edgesRightToSink.add(rightVertex.makeEdgeTo(sink, 1))); // todo proper weight?
 
 		this.edges = new DirectedWeightedEdges<>();
 

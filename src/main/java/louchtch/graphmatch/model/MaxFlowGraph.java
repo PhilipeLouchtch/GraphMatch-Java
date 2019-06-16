@@ -50,7 +50,7 @@ public class MaxFlowGraph<T>
 
 	public void augmentAlong(MaxFlowMatching.BellmanFordAugmentingPath<T> path)
 	{
-		System.out.println("Augmenting path: " + path);
+//		System.out.println("Augmenting path: " + path);
 		path.forEach(edge -> {
 			this.edges.turnResidiual(edge);
 		});

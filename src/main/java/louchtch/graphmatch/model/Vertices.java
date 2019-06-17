@@ -1,6 +1,7 @@
 package louchtch.graphmatch.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -27,6 +28,11 @@ public class Vertices<VertexContent>
 	public void forEach(Consumer<Vertex<VertexContent>> fn)
 	{
 		listOfVertices.forEach(fn);
+	}
+
+	public List<Vertex<VertexContent>> asReadonlyList()
+	{
+		return Collections.unmodifiableList(listOfVertices);
 	}
 
 	public Vertices<VertexContent> with(Vertices<VertexContent> others)

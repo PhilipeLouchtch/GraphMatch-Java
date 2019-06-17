@@ -116,33 +116,29 @@ public class MaxFlowMatching<T> implements Matching
 		private Map<Vertex<T>, Vertex<T>> bellmanFordParents()
 		{
 			if (_parents == null) {
-				/* Distances & initialization of, todo: move into own class */
-				Map<Vertex<T>, Float> distance = new IdentityHashMap<>(graph.vertices.count());
+				/* Distances & initialization of */
+				Distance<T> distance = new Distance<>(graph.vertices, Float.POSITIVE_INFINITY);
 				Map<Vertex<T>, Vertex<T>> parents = new IdentityHashMap<>(graph.vertices.count());
 
-				/* init distances (from source) to infinity*/
-				graph.vertices.forEach(v -> {
-					distance.put(v, Float.POSITIVE_INFINITY);
-				});
 				// distance from source to self is 0
-				distance.put(graph.source, 0f);
+				distance.set(graph.source, 0f);
 
 				/* step 2 */
 				graph.vertices.forEach(i ->
 					graph.edges.forEach(edge -> {
-						Float distanceVertFrom = distance.get(edge.from);
-						Float distanceVertTo = distance.get(edge.to);
+						float distanceVertFrom = distance.get(edge.from);
+						float distanceVertTo = distance.get(edge.to);
 
 						float newDistance = distanceVertFrom + edge.weight;
 						if (newDistance < distanceVertTo)
 						{
-							distance.put(edge.to, newDistance);
+							distance.set(edge.to, newDistance);
 							parents.put(edge.to, edge.from);
 						}
 				}));
 
 				/* step 3: negative-weight cycle detection */
-				NegativeWeightCycleDetection<T> negativeWeightCycleDetection = new NegativeWeightCycleDetection<>(distance);
+				NegativeWeightCycleDetection<T> negativeWeightCycleDetection = new NegativeWeightCycleDetection<T>(distance);
 				graph.edges.forEach(negativeWeightCycleDetection::detectFor);
 
 				_parents = parents;
@@ -176,11 +172,44 @@ public class MaxFlowMatching<T> implements Matching
 			return path;
 		}
 
+		private static class Distance<T>
+		{
+			private final int min;
+			private final int max;
+
+			private float[] distances;
+
+			public Distance(Vertices<T> verts, float initialValue)
+			{
+				// determine min id && max
+				ArrayList<Vertex<T>> asList = new ArrayList<>(verts.asReadonlyList());
+				asList.sort(Comparator.comparing(v -> v.id));
+
+				this.min = asList.get(0).id;
+				this.max = asList.get(asList.size() - 1).id;
+
+				distances = new float[max - min + 1];
+
+				// initialize
+				Arrays.fill(distances, initialValue);
+			}
+
+			public float get(Vertex<T> vert)
+			{
+				return distances[vert.id - min];
+			}
+
+			public void set(Vertex<T> vert, float newValue)
+			{
+				distances[vert.id - min] = newValue;
+			}
+		}
+
 		private static class NegativeWeightCycleDetection<T>
 		{
-			private final Map<Vertex<T>, Float> distance;
+			private final Distance<T> distance;
 
-			public NegativeWeightCycleDetection(Map<Vertex<T>, Float> distance)
+			public NegativeWeightCycleDetection(Distance<T> distance)
 			{
 				this.distance = distance;
 			}

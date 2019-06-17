@@ -128,27 +128,22 @@ public class MaxFlowMatching<T> implements Matching
 				distance.put(graph.source, 0f);
 
 				/* step 2 */
-				graph.vertices.forEach(i -> {
+				graph.vertices.forEach(i ->
 					graph.edges.forEach(edge -> {
+						Float distanceVertFrom = distance.get(edge.from);
+						Float distanceVertTo = distance.get(edge.to);
 
-						if (distance.get(edge.from) + edge.weight < distance.get(edge.to))
+						float newDistance = distanceVertFrom + edge.weight;
+						if (newDistance < distanceVertTo)
 						{
-							float newDistance = distance.get(edge.from) + edge.weight;
 							distance.put(edge.to, newDistance);
-
 							parents.put(edge.to, edge.from);
 						}
-					});
-				});
+				}));
 
 				/* step 3: negative-weight cycle detection */
-				graph.edges.forEach(edge -> {
-					if (distance.get(edge.from) + edge.weight < distance.get(edge.to))
-					{
-						// todo: emit more info
-						throw new RuntimeException("graph contains a negative-weight cycle");
-					}
-				});
+				NegativeWeightCycleDetection<T> negativeWeightCycleDetection = new NegativeWeightCycleDetection<>(distance);
+				graph.edges.forEach(negativeWeightCycleDetection::detectFor);
 
 				_parents = parents;
 			}
@@ -179,6 +174,25 @@ public class MaxFlowMatching<T> implements Matching
 
 			Collections.reverse(path);
 			return path;
+		}
+
+		private static class NegativeWeightCycleDetection<T>
+		{
+			private final Map<Vertex<T>, Float> distance;
+
+			public NegativeWeightCycleDetection(Map<Vertex<T>, Float> distance)
+			{
+				this.distance = distance;
+			}
+
+			public void detectFor(DirectedWeightedEdges.DirectedWeightedEdge<T> edge)
+			{
+				if (distance.get(edge.from) + edge.weight < distance.get(edge.to))
+				{
+					// todo: emit more info
+					throw new RuntimeException("graph contains a negative-weight cycle");
+				}
+			}
 		}
 	}
 }

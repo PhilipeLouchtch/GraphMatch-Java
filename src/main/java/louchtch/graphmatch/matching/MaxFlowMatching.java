@@ -118,7 +118,7 @@ public class MaxFlowMatching<T> implements Matching
 			if (_parents == null) {
 				/* Distances & initialization of */
 				Distance<T> distance = new Distance<>(graph.vertices, Float.POSITIVE_INFINITY);
-				Map<Vertex<T>, Vertex<T>> parents = new IdentityHashMap<>(graph.vertices.count());
+				Parents<T> parents = new Parents<>(graph.vertices);
 
 				// distance from source to self is 0
 				distance.set(graph.source, 0f);
@@ -133,7 +133,7 @@ public class MaxFlowMatching<T> implements Matching
 						if (newDistance < distanceVertTo)
 						{
 							distance.set(edge.to, newDistance);
-							parents.put(edge.to, edge.from);
+							parents.set(edge.to, edge.from);
 						}
 				}));
 
@@ -141,7 +141,7 @@ public class MaxFlowMatching<T> implements Matching
 				NegativeWeightCycleDetection<T> negativeWeightCycleDetection = new NegativeWeightCycleDetection<T>(distance);
 				graph.edges.forEach(negativeWeightCycleDetection::detectFor);
 
-				_parents = parents;
+				_parents = parents.asMap();
 			}
 
 			return _parents;
@@ -202,6 +202,56 @@ public class MaxFlowMatching<T> implements Matching
 			public void set(Vertex<T> vert, float newValue)
 			{
 				distances[vert.id - min] = newValue;
+			}
+		}
+
+		private static class Parents<T>
+		{
+			private final int min;
+			private final int max;
+			private final Vertices<T> verts;
+
+			private Vertex[] edges;
+
+			public Parents(Vertices<T> verts)
+			{
+				this.verts = verts;
+				// determine min id && max
+				ArrayList<Vertex<T>> asList = new ArrayList<>(verts.asReadonlyList());
+				asList.sort(Comparator.comparing(v -> v.id));
+
+				this.min = asList.get(0).id;
+				this.max = asList.get(asList.size() - 1).id;
+
+				edges = new Vertex[max - min + 1];
+
+				// initialize
+				Arrays.fill(edges, null);
+			}
+
+			public void set(Vertex<T> from, Vertex<T> to)
+			{
+				edges[from.id - min] = to;
+			}
+
+			private Vertex<T> get(Vertex<T> v)
+			{
+				return edges[v.id - min];
+			}
+
+			public Map<Vertex<T>, Vertex<T>> asMap()
+			{
+				Map<Vertex<T>, Vertex<T>> map = new IdentityHashMap<>(verts.count());
+
+				verts.forEach(v -> {
+
+					Vertex<T> to = get(v);
+
+					if (to != null)
+						map.put(v, to);
+				});
+
+				return map;
 			}
 		}
 
